@@ -1,0 +1,211 @@
+####################################################################
+# 공통 환경 설정
+####################################################################
+server:
+  port: 8080
+
+jwt:
+  header: Authorization
+  #HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
+  #echo 'com.caremoa.jwtcom.caremoa.jwtcom.caremoa.jwtcom.caremoa.jwtcom.caremoa.jwtcom.caremoa.jwt'|base64
+  secret: Y29tLmNhcmVtb2Euand0Y29tLmNhcmVtb2Euand0Y29tLmNhcmVtb2Euand0Y29tLmNhcmVtb2Euand0Y29tLmNhcmVtb2Euand0Y29tLmNhcmVtb2Euand0Cg==
+  token-validity-in-seconds: 86400
+
+---         
+####################################################################
+# Local 개발환경 설정
+####################################################################
+spring:
+  config:
+    activate:
+      on-profile: default
+      
+  cloud:
+    gateway:
+      # Spring Cloud Gateway CORS 문제 해결하기
+      # https://velog.io/@mdy0102/Spring-Cloud-Gateway-CORS-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins: "http://localhost:8080"
+            allow-credentials: true
+            allowedHeaders: "*"
+            allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+      routes:
+        - id: caremoa-authority
+          uri: http://localhost:8079    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/authority/**    # 요청 Path
+          filters:
+            - AddRequestHeader=member-request, member-request-header2
+            - AddResponseHeader=member-response, member-response-header2
+
+        - id: caremoa-member
+          uri: http://localhost:8081    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/member/**    # 요청 Path
+          filters:
+            - AddRequestHeader=member-request, member-request-header2
+            - AddResponseHeader=member-response, member-response-header2
+            
+        - id: caremoa-helper
+          uri: http://localhost:8082
+          predicates:            
+            - Path=/helper/**
+          filters:
+          #  - JwtAuthentication=ROLE_ADMIN
+          #  - AuthorizationHeaderFilter # JWT 검증을 위한 Custom GatewayFilter
+            - AddRequestHeader=helper-request, helper-request-header2
+            - AddResponseHeader=helper-response, helper-response-header2
+
+        - id: caremoa-contract
+          uri: http://localhost:8083    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/contract/**    # 요청 Path
+          filters:
+            - AddRequestHeader=contract-request, contract-request-header2
+            - AddResponseHeader=contract-response, contract-response-header2
+
+        - id: caremoa-payment
+          uri: http://localhost:8084    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/payment/**    # 요청 Path
+          filters:
+            - AddRequestHeader=payment-request, payment-request-header2
+            - AddResponseHeader=payment-response, payment-response-header2
+
+        - id: caremoa-claim
+          uri: http://localhost:8085    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/claim/**    # 요청 Path
+          filters:
+            - AddRequestHeader=claim-request, claim-request-header2
+            - AddResponseHeader=claim-response, claim-response-header2
+
+        - id: caremoa-settlement
+          uri: http://localhost:8086    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/settlement/**    # 요청 Path
+          filters:
+            - AddRequestHeader=settlement-request, settlement-request-header2
+            - AddResponseHeader=settlement-response, settlement-response-header2
+
+        - id: caremoa-aftercare
+          uri: http://localhost:8087    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/review/**    # 요청 Path
+          filters:
+            - AddRequestHeader=member-request, member-request-header2
+            - AddResponseHeader=member-response, member-response-header2
+logging:
+  level:
+    root: error # trace, debug, info, warn, error, fatal
+    '[org.springframework.cloud]': debug
+    '[com.caremoa.gateway]': debug    
+
+---
+####################################################################
+# 서버배포(Docker)환경 설정
+####################################################################    
+spring:
+  config:
+    activate:
+      on-profile: docker
+      
+  cloud:
+    gateway:
+      # Spring Cloud Gateway CORS 문제 해결하기
+      # https://velog.io/@mdy0102/Spring-Cloud-Gateway-CORS-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0%ED%95%98%EA%B8%B0
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins: "http://localhost:8080"
+            allow-credentials: true
+            allowedHeaders: "*"
+            allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+      routes:
+        - id: caremoa-authority
+          uri: http://authority:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/authority/**    # 요청 Path
+          filters:
+            - AddRequestHeader=member-request, member-request-header2
+            - AddResponseHeader=member-response, member-response-header2
+
+        - id: caremoa-member
+          uri: http://member:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/member/**    # 요청 Path
+          filters:
+            - AddRequestHeader=member-request, member-request-header2
+            - AddResponseHeader=member-response, member-response-header2
+            
+        - id: caremoa-helper
+          uri: http://helper:8080
+          predicates:            
+            - Path=/helper/**
+          filters:
+          #  - JwtAuthentication=ROLE_ADMIN
+          #  - AuthorizationHeaderFilter # JWT 검증을 위한 Custom GatewayFilter
+            - AddRequestHeader=helper-request, helper-request-header2
+            - AddResponseHeader=helper-response, helper-response-header2
+
+        - id: caremoa-contract
+          uri: http://contract:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/contract/**    # 요청 Path
+          filters:
+            - AddRequestHeader=contract-request, contract-request-header2
+            - AddResponseHeader=contract-response, contract-response-header2
+
+        - id: caremoa-payment
+          uri: http://payment:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/payment/**    # 요청 Path
+          filters:
+            - AddRequestHeader=payment-request, payment-request-header2
+            - AddResponseHeader=payment-response, payment-response-header2
+
+        - id: caremoa-claim
+          uri: http://claim:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/claim/**    # 요청 Path
+          filters:
+            - AddRequestHeader=claim-request, claim-request-header2
+            - AddResponseHeader=claim-response, claim-response-header2
+
+        - id: caremoa-settlement
+          uri: http://settlement:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/settlement/**    # 요청 Path
+          filters:
+            - AddRequestHeader=settlement-request, settlement-request-header2
+            - AddResponseHeader=settlement-response, settlement-response-header2
+
+        - id: caremoa-aftercare
+          uri: http://review:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/review/**    # 요청 Path
+          filters:
+            - AddRequestHeader=member-request, member-request-header2
+            - AddResponseHeader=member-response, member-response-header2
+logging:
+  level:
+    root: error # trace, debug, info, warn, error, fatal
+    '[org.springframework.cloud]': debug
+    '[com.caremoa.gateway]': debug    
+

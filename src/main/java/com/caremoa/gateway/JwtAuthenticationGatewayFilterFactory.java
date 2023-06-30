@@ -9,6 +9,7 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -66,6 +67,7 @@ public class JwtAuthenticationGatewayFilterFactory
 			String tokenRole = tokenProvider.getAuthentication(token);
 			log.info("userid : {}", userId);
 			log.info("role : {}", tokenRole);
+			log.info("config.role : {}", config.role);
 			if (!hasRole(tokenRole, config.role)) {
 				return onError(response, "invalid role", HttpStatus.FORBIDDEN);
 			}
@@ -88,9 +90,15 @@ public class JwtAuthenticationGatewayFilterFactory
 		return null;
 	}
 
-	private boolean hasRole(String tokenrole, String role) {
+	private boolean hasRole(String tokenroles, String role) {
 		if (role != null) {
-			return tokenrole.contains(role);
+			String[] roles = tokenroles.split(",");
+			
+			for(String tokenrole : roles ) {
+				if( role.contains(tokenrole) )
+					return true;
+			}
+			return false;
 		} else {
 			return true;
 		}
@@ -102,6 +110,7 @@ public class JwtAuthenticationGatewayFilterFactory
 
 	private Mono<Void> onError(ServerHttpResponse response, String message, HttpStatus status) {
 		response.setStatusCode(status);
+		 response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
 		DataBuffer buffer = response.bufferFactory().wrap(message.getBytes(StandardCharsets.UTF_8));
 		return response.writeWith(Mono.just(buffer));
 	}

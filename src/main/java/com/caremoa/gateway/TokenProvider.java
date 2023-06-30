@@ -35,7 +35,7 @@ public class TokenProvider implements InitializingBean {
 
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
-    public static final String AUTHORITIES_KEY = "auth";
+    public static final String AUTHORITIES_KEY = "role";
 
     private final String secret;
     private final long tokenValidityInMilliseconds;

@@ -1,6 +1,18 @@
 ####################################################################
 # 공통 환경 설정
 ####################################################################
+#-------------------------------------------------------------------
+# 업무별권한설정
+#-------------------------------------------------------------------
+role:
+  member: # ADMIN|USER|HELPER
+  helper: # ADMIN|USER|HELPER
+  contract: # ADMIN|USER|HELPER
+  payment: # ADMIN
+  claim: # ADMIN|USER|HELPER
+  settlement: # ADMIN
+  review: # ADMIN|USER|HELPER
+  
 server:
   port: 8080
 
@@ -44,66 +56,129 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/authority/**    # 요청 Path
           filters:
-            - AddRequestHeader=member-request, member-request-header2
-            - AddResponseHeader=member-response, member-response-header2
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
 
+        - id: caremoa-member-swagger
+          uri: http://localhost:8081    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/member/swagger**/**, /member/swagger**, /member/api-docs/**
+          filters:
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
+
+        - id: caremoa-helper-swagger
+          uri: http://localhost:8082
+          predicates:            
+            - Path=/helper/swagger**/**, /helper/swagger**, /helper/api-docs/**
+          filters:
+          #  - AuthorizationHeaderFilter # JWT 검증을 위한 Custom GatewayFilter
+            # - AddRequestHeader=helper-request, helper-request-header2
+            # - AddResponseHeader=helper-response, helper-response-header2
+        
+        - id: caremoa-contract-swagger
+          uri: http://localhost:8083    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/contract/swagger**/**, /contract/swagger**, /contract/api-docs/**
+          filters:
+            # - AddRequestHeader=contract-request, contract-request-header2
+            # - AddResponseHeader=contract-response, contract-response-header2
+
+        - id: caremoa-payment-swagger
+          uri: http://localhost:8084    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/payment/swagger**/**, /payment/swagger**, /payment/api-docs/**
+          filters:
+            # - AddRequestHeader=payment-request, payment-request-header2
+            # - AddResponseHeader=payment-response, payment-response-header2
+
+        - id: caremoa-claim-swagger
+          uri: http://localhost:8085    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/claim/swagger**/**, /claim/swagger**, /claim/api-docs/**
+          filters:
+            # - AddRequestHeader=claim-request, claim-request-header2
+            # - AddResponseHeader=claim-response, claim-response-header2
+
+        - id: caremoa-settlement-swagger
+          uri: http://localhost:8086    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/settlement/**    # 요청 Path
+          filters:
+            # - AddRequestHeader=settlement-request, settlement-request-header2
+            # - AddResponseHeader=settlement-response, settlement-response-header2
+
+        - id: caremoa-aftercare-swagger
+          uri: http://localhost:8087    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/review/swagger**/**, /review/swagger**, /review/api-docs/**
+          filters:
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
+            
         - id: caremoa-member
           uri: http://localhost:8081    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/member/**    # 요청 Path
           filters:
-            - AddRequestHeader=member-request, member-request-header2
-            - AddResponseHeader=member-response, member-response-header2
-            
+            - JwtAuthentication=${role.member}
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
+           
         - id: caremoa-helper
           uri: http://localhost:8082
           predicates:            
             - Path=/helper/**
           filters:
-          #  - JwtAuthentication=ROLE_ADMIN
+            - JwtAuthentication=${role.helper}
           #  - AuthorizationHeaderFilter # JWT 검증을 위한 Custom GatewayFilter
-            - AddRequestHeader=helper-request, helper-request-header2
-            - AddResponseHeader=helper-response, helper-response-header2
+            # - AddRequestHeader=helper-request, helper-request-header2
+            # - AddResponseHeader=helper-response, helper-response-header2
 
         - id: caremoa-contract
           uri: http://localhost:8083    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/contract/**    # 요청 Path
           filters:
-            - AddRequestHeader=contract-request, contract-request-header2
-            - AddResponseHeader=contract-response, contract-response-header2
+            - JwtAuthentication=${role.member}
+            # - AddRequestHeader=contract-request, contract-request-header2
+            # - AddResponseHeader=contract-response, contract-response-header2
 
         - id: caremoa-payment
           uri: http://localhost:8084    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/payment/**    # 요청 Path
           filters:
-            - AddRequestHeader=payment-request, payment-request-header2
-            - AddResponseHeader=payment-response, payment-response-header2
+            - JwtAuthentication=${role.payment}
+            # - AddRequestHeader=payment-request, payment-request-header2
+            # - AddResponseHeader=payment-response, payment-response-header2
 
         - id: caremoa-claim
           uri: http://localhost:8085    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/claim/**    # 요청 Path
           filters:
-            - AddRequestHeader=claim-request, claim-request-header2
-            - AddResponseHeader=claim-response, claim-response-header2
+            - JwtAuthentication=${role.claim}
+            # - AddRequestHeader=claim-request, claim-request-header2
+            # - AddResponseHeader=claim-response, claim-response-header2
 
         - id: caremoa-settlement
           uri: http://localhost:8086    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/settlement/**    # 요청 Path
           filters:
-            - AddRequestHeader=settlement-request, settlement-request-header2
-            - AddResponseHeader=settlement-response, settlement-response-header2
+            - JwtAuthentication=${role.settlement}
+            # - AddRequestHeader=settlement-request, settlement-request-header2
+            # - AddResponseHeader=settlement-response, settlement-response-header2
 
         - id: caremoa-aftercare
           uri: http://localhost:8087    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/review/**    # 요청 Path
           filters:
-            - AddRequestHeader=member-request, member-request-header2
-            - AddResponseHeader=member-response, member-response-header2
+            - JwtAuthentication=${role.review}
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
 logging:
   level:
     root: error # trace, debug, info, warn, error, fatal
@@ -128,7 +203,7 @@ spring:
       globalcors:
         corsConfigurations:
           "[/**]":
-            allowedOrigins: "http://localhost:8080"
+            allowedOrigins: "http://gateway:8080"
             allow-credentials: true
             allowedHeaders: "*"
             allowedMethods:
@@ -143,66 +218,129 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/authority/**    # 요청 Path
           filters:
-            - AddRequestHeader=member-request, member-request-header2
-            - AddResponseHeader=member-response, member-response-header2
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
 
+        - id: caremoa-member-swagger
+          uri: http://member:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/member/swagger**/**, /member/swagger**, /member/api-docs/**
+          filters:
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
+
+        - id: caremoa-helper-swagger
+          uri: http://helper:8080
+          predicates:            
+            - Path=/helper/swagger**/**, /helper/swagger**, /helper/api-docs/**
+          filters:
+          #  - AuthorizationHeaderFilter # JWT 검증을 위한 Custom GatewayFilter
+            # - AddRequestHeader=helper-request, helper-request-header2
+            # - AddResponseHeader=helper-response, helper-response-header2
+        
+        - id: caremoa-contract-swagger
+          uri: http://contract:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/contract/swagger**/**, /contract/swagger**, /contract/api-docs/**
+          filters:
+            # - AddRequestHeader=contract-request, contract-request-header2
+            # - AddResponseHeader=contract-response, contract-response-header2
+
+        - id: caremoa-payment-swagger
+          uri: http://payment:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/payment/swagger**/**, /payment/swagger**, /payment/api-docs/**
+          filters:
+            # - AddRequestHeader=payment-request, payment-request-header2
+            # - AddResponseHeader=payment-response, payment-response-header2
+
+        - id: caremoa-claim-swagger
+          uri: http://claim:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/claim/swagger**/**, /claim/swagger**, /claim/api-docs/**
+          filters:
+            # - AddRequestHeader=claim-request, claim-request-header2
+            # - AddResponseHeader=claim-response, claim-response-header2
+
+        - id: caremoa-settlement-swagger
+          uri: http://settlement:8080    # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/settlement/**    # 요청 Path
+          filters:
+            # - AddRequestHeader=settlement-request, settlement-request-header2
+            # - AddResponseHeader=settlement-response, settlement-response-header2
+
+        - id: caremoa-aftercare-swagger
+          uri: http://review:8080       # 인증 서버 URI 
+          predicates:                   # 요청 헤더나 Path 조건 비교
+            - Path=/review/swagger**/**, /review/swagger**, /review/api-docs/**
+          filters:
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
+ 
         - id: caremoa-member
           uri: http://member:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/member/**    # 요청 Path
           filters:
-            - AddRequestHeader=member-request, member-request-header2
-            - AddResponseHeader=member-response, member-response-header2
+            - JwtAuthentication=${role.member}
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
             
         - id: caremoa-helper
           uri: http://helper:8080
           predicates:            
             - Path=/helper/**
           filters:
-          #  - JwtAuthentication=ROLE_ADMIN
+            - JwtAuthentication=${role.helper}
           #  - AuthorizationHeaderFilter # JWT 검증을 위한 Custom GatewayFilter
-            - AddRequestHeader=helper-request, helper-request-header2
-            - AddResponseHeader=helper-response, helper-response-header2
+            # - AddRequestHeader=helper-request, helper-request-header2
+            # - AddResponseHeader=helper-response, helper-response-header2
 
         - id: caremoa-contract
           uri: http://contract:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/contract/**    # 요청 Path
           filters:
-            - AddRequestHeader=contract-request, contract-request-header2
-            - AddResponseHeader=contract-response, contract-response-header2
+            - JwtAuthentication=${role.contract}
+            # - AddRequestHeader=contract-request, contract-request-header2
+            # - AddResponseHeader=contract-response, contract-response-header2
 
         - id: caremoa-payment
           uri: http://payment:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/payment/**    # 요청 Path
           filters:
-            - AddRequestHeader=payment-request, payment-request-header2
-            - AddResponseHeader=payment-response, payment-response-header2
+            - JwtAuthentication=${role.payment}
+            # - AddRequestHeader=payment-request, payment-request-header2
+            # - AddResponseHeader=payment-response, payment-response-header2
 
         - id: caremoa-claim
           uri: http://claim:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/claim/**    # 요청 Path
           filters:
-            - AddRequestHeader=claim-request, claim-request-header2
-            - AddResponseHeader=claim-response, claim-response-header2
+            - JwtAuthentication=${role.claim}
+            # - AddRequestHeader=claim-request, claim-request-header2
+            # - AddResponseHeader=claim-response, claim-response-header2
 
         - id: caremoa-settlement
           uri: http://settlement:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/settlement/**    # 요청 Path
           filters:
-            - AddRequestHeader=settlement-request, settlement-request-header2
-            - AddResponseHeader=settlement-response, settlement-response-header2
+            - JwtAuthentication=${role.settlement}
+            # - AddRequestHeader=settlement-request, settlement-request-header2
+            # - AddResponseHeader=settlement-response, settlement-response-header2
 
         - id: caremoa-aftercare
           uri: http://review:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/review/**    # 요청 Path
           filters:
-            - AddRequestHeader=member-request, member-request-header2
-            - AddResponseHeader=member-response, member-response-header2
+            - JwtAuthentication=${role.review}
+            # - AddRequestHeader=member-request, member-request-header2
+            # - AddResponseHeader=member-response, member-response-header2
 logging:
   level:
     root: error # trace, debug, info, warn, error, fatal

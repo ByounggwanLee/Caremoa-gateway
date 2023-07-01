@@ -203,8 +203,8 @@ spring:
       globalcors:
         corsConfigurations:
           "[/**]":
-            allowedOrigins: "http://gateway:8080"
-            allow-credentials: true
+            allowedOrigins: "*" #  "http://gateway:8080"
+            allow-credentials: false
             allowedHeaders: "*"
             allowedMethods:
             - GET

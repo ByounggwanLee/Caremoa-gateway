@@ -283,7 +283,7 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/member/**    # 요청 Path
           filters:
-            - JwtAuthentication=${role.member}
+            # - JwtAuthentication=${role.member}
             # - AddRequestHeader=member-request, member-request-header2
             # - AddResponseHeader=member-response, member-response-header2
             
@@ -292,7 +292,7 @@ spring:
           predicates:            
             - Path=/helper/**
           filters:
-            - JwtAuthentication=${role.helper}
+            # - JwtAuthentication=${role.helper}
           #  - AuthorizationHeaderFilter # JWT 검증을 위한 Custom GatewayFilter
             # - AddRequestHeader=helper-request, helper-request-header2
             # - AddResponseHeader=helper-response, helper-response-header2
@@ -302,7 +302,7 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/contract/**    # 요청 Path
           filters:
-            - JwtAuthentication=${role.contract}
+            # - JwtAuthentication=${role.contract}
             # - AddRequestHeader=contract-request, contract-request-header2
             # - AddResponseHeader=contract-response, contract-response-header2
 
@@ -311,7 +311,7 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/payment/**    # 요청 Path
           filters:
-            - JwtAuthentication=${role.payment}
+            # - JwtAuthentication=${role.payment}
             # - AddRequestHeader=payment-request, payment-request-header2
             # - AddResponseHeader=payment-response, payment-response-header2
 
@@ -320,7 +320,7 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/claim/**    # 요청 Path
           filters:
-            - JwtAuthentication=${role.claim}
+            # - JwtAuthentication=${role.claim}
             # - AddRequestHeader=claim-request, claim-request-header2
             # - AddResponseHeader=claim-response, claim-response-header2
 
@@ -329,7 +329,7 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/settlement/**    # 요청 Path
           filters:
-            - JwtAuthentication=${role.settlement}
+            # - JwtAuthentication=${role.settlement}
             # - AddRequestHeader=settlement-request, settlement-request-header2
             # - AddResponseHeader=settlement-response, settlement-response-header2
 
@@ -338,7 +338,7 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/review/**    # 요청 Path
           filters:
-            - JwtAuthentication=${role.review}
+            # - JwtAuthentication=${role.review}
             # - AddRequestHeader=member-request, member-request-header2
             # - AddResponseHeader=member-response, member-response-header2
 logging:

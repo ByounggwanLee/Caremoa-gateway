@@ -95,7 +95,7 @@ spring:
         - id: caremoa-claim-swagger
           uri: http://localhost:8085    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
-            - Path=/claim/swagger**/**, /claim/swagger**, /claim/api-docs/**
+            - Path=/claim/swagger**/**, /claim/swagger**, /claim/api-docs/**, /claim/webjars/**, /claim/v2/api-docs, /claim/v3/api-docs/**
           filters:
             # - AddRequestHeader=claim-request, claim-request-header2
             # - AddResponseHeader=claim-response, claim-response-header2
@@ -103,7 +103,7 @@ spring:
         - id: caremoa-settlement-swagger
           uri: http://localhost:8086    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
-            - Path=/settlement/**    # 요청 Path
+            - Path=/settlement/swagger**/**, /settlement/swagger**, /settlement/api-docs/**   # 요청 Path
           filters:
             # - AddRequestHeader=settlement-request, settlement-request-header2
             # - AddResponseHeader=settlement-response, settlement-response-header2
@@ -111,7 +111,7 @@ spring:
         - id: caremoa-aftercare-swagger
           uri: http://localhost:8087    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
-            - Path=/review/swagger**/**, /review/swagger**, /review/api-docs/**
+            - Path=/review/swagger**/**, /review/swagger**, /review/api-docs/**, /review/webjars/**, /review/v2/api-docs, /review/v3/api-docs/**
           filters:
             # - AddRequestHeader=member-request, member-request-header2
             # - AddResponseHeader=member-response, member-response-header2
@@ -257,7 +257,7 @@ spring:
         - id: caremoa-claim-swagger
           uri: http://claim:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
-            - Path=/claim/swagger**/**, /claim/swagger**, /claim/api-docs/**
+            - Path=/claim/swagger**/**, /claim/swagger**, /claim/api-docs/**, /claim/webjars/**, /claim/v2/api-docs, /claim/v3/api-docs/**
           filters:
             # - AddRequestHeader=claim-request, claim-request-header2
             # - AddResponseHeader=claim-response, claim-response-header2
@@ -265,7 +265,7 @@ spring:
         - id: caremoa-settlement-swagger
           uri: http://settlement:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
-            - Path=/settlement/**    # 요청 Path
+            - Path=/settlement/swagger**/**, /settlement/swagger**, /settlement/api-docs/**   # 요청 Path
           filters:
             # - AddRequestHeader=settlement-request, settlement-request-header2
             # - AddResponseHeader=settlement-response, settlement-response-header2
@@ -273,7 +273,7 @@ spring:
         - id: caremoa-aftercare-swagger
           uri: http://review:8080       # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
-            - Path=/review/swagger**/**, /review/swagger**, /review/api-docs/**
+            - Path=/review/swagger**/**, /review/swagger**, /review/api-docs/**, /review/webjars/**, /review/v2/api-docs, /review/v3/api-docs/**
           filters:
             # - AddRequestHeader=member-request, member-request-header2
             # - AddResponseHeader=member-response, member-response-header2

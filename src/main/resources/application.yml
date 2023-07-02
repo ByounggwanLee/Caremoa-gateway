@@ -140,7 +140,7 @@ spring:
           predicates:                   # 요청 헤더나 Path 조건 비교
             - Path=/contract/**    # 요청 Path
           filters:
-            - JwtAuthentication=${role.member}
+            - JwtAuthentication=${role.contract}
             # - AddRequestHeader=contract-request, contract-request-header2
             # - AddResponseHeader=contract-response, contract-response-header2
 
@@ -300,7 +300,7 @@ spring:
         - id: caremoa-contract
           uri: http://contract:8080    # 인증 서버 URI 
           predicates:                   # 요청 헤더나 Path 조건 비교
-            - Path=/contract/**, /contract/**/**/**     # 요청 Path
+            - Path=/contract/**
           filters:
             # - JwtAuthentication=${role.contract}
             # - AddRequestHeader=contract-request, contract-request-header2
